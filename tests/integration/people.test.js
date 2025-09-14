@@ -1,0 +1,55 @@
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const sinon = require('sinon');
+
+const app = require('../../src/app');
+const connection = require('../../src/db/connection');
+
+const { expect, use } = chai;
+
+use(chaiHttp);
+
+const peopleList = [
+  {
+    id: 1,
+    firstName: 'Luke',
+    lastName: 'Skywalker',
+    email: 'luke.skywalker@trybe.com',
+    phone: '851 678 4453',
+  },
+  {
+    id: 2,
+    firstName: 'Dart',
+    lastName: 'Vader',
+    email: 'dart.vader@trybe.com',
+    phone: '851 678 5665',
+  },
+];
+
+
+describe('Test people endpoints', function () {
+    it('List all people', async function () {
+        sinon.stub(connection, 'execute').resolves([{}])
+    })
+
+    it('Test people registration', async function () {
+        sinon.stub(connection, 'execute').resolves([{ insertId: 42 }]);
+
+        const response = await chai
+            .request(app)
+            .post('/people')
+            .send(
+                {
+                    firstName: 'Luke',
+                    lastName: 'Skywalker',
+                    email: 'luke.skywalker@trybe.com',
+                    phone: '851 678 4453',
+                },
+            );
+        
+        expect(response.status).to.equal(201);
+        expect(response.body).to.deep.equal({ message: 'Person registered with id 42' });
+    });
+
+    afterEach(sinon.restore);
+});

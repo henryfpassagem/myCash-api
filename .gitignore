@@ -1,0 +1,38 @@
+# Node dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+*.log
+logs/
+debug.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Coverage / test reports
+coverage/
+.nyc_output/
+
+# Build / distribution folders
+dist/
+build/
+
+# Docker-related (only temporary data, do not ignore configuration files)
+docker-data/
+.docker/        # local cache or temporary Docker files
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Miscellaneous
+*.tgz

@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  node:
+    # Build a container based on customized Dockerfile image
+    build: 
+      dockerfile: ./Dockerfile
+      context: .
+    container_name: myCash_api
+    restart: always
+    # execution standart directory
+    working_dir: /app
+    volumes:
+      # Maps the current dirctory, with all data, to directory /app in the container
+      - ./:/app
+    ports:
+      - 3001:3001
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_HOST: database
+      MYSQL_PORT: 3306
+    # Inialize this container after the database container is up.
+    depends_on:
+      database:
+        condition: service_healthy  
+  database:
+    image: mysql:8.0.29
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=myCash_db
+
+    healthcheck:
+      # test if the MySQL server is responding
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    ports:
+      - "33061:3306"
+    # Mounts the SQL script into the container so it runs automatically at database initialization
+    volumes:
+      - ./myCash_script.sql:/docker-entrypoint-initdb.d/myCash_script.sql
