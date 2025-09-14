@@ -29,7 +29,25 @@ const peopleList = [
 
 describe('Test people endpoints', function () {
     it('List all people', async function () {
-        sinon.stub(connection, 'execute').resolves([{}])
+        sinon.stub(connection, 'execute').resolves([peopleList]);
+
+        const response = await chai
+            .request(app)
+            .get('/people');
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.deep.equal(peopleList);
+    });
+
+    it('List person by id = 1', async function () {
+        sinon.stub(connection, 'execute').resolves([[peopleList[0]]]);
+
+        const response = await chai
+            .request(app)
+            .get('/people/1');
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.deep.equal(peopleList[0]);
     })
 
     it('Test people registration', async function () {
