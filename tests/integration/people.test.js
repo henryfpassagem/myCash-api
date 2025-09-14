@@ -69,5 +69,35 @@ describe('Test people endpoints', function () {
         expect(response.body).to.deep.equal({ message: 'Person registered with id 42' });
     });
 
+    it('Update person with id = 1', async function () {
+        sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
+
+        const response = await chai
+            .request(app)
+            .put('/people/1')
+            .send(
+                {
+                    firstName: 'Luca',
+                    lastName: 'Andralhos',
+                    email: 'luca.andralhos@yahoo.com',
+                    phone: '851 678 4453',
+                },
+            );
+        
+            expect(response.status).to.equal(200);
+            expect(response.body).to.deep.equal({ message: 'Person with id 1 updated'});
+    });
+
+    it('Delete a person with id 1', async function () {
+        sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
+
+        const response = await chai
+            .request(app)
+            .delete('/people/1')
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.deep.equal({ message: 'Person with id 1 was deleted'});
+    });
+
     afterEach(sinon.restore);
 });

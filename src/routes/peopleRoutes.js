@@ -1,5 +1,6 @@
 const express = require('express');
 const peopleDB = require('../db/peopleDB');
+const { route } = require('../app');
 
 const router = express.Router();
 
@@ -36,5 +37,34 @@ router.post('/', async (req, res) => {
         res.status(500).json({ message: `Error when registering person`});
     }
 });
+
+router.put('/:id', async (req, res) => {
+    try{
+        const { id } = req.params;
+        const person = req.body;
+        const [result] = await peopleDB.update(Number(id), person);
+        if (result.affectedRows > 0){
+            res.status(200).json({ message: `Person with id ${id} updated` });
+        } else {
+            res.status(404).json({ message: `Person not found` });
+        } 
+    } catch (err) {
+        res.status(500).json({ message: err.sqlMessage });
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+    try{
+        const{ id } = req.params;
+        const [result] = await peopleDB.remove(Number(id));
+        if (result.affectedRows > 0) {
+            res.status(200).json({ message: `Person with id ${id} was deleted`});
+        } else {
+            res.status(404).json({ message: `Person not found` });
+        }
+    } catch (err) {
+        res.status(500).json({ message: err.sqlMessage });
+    }
+})
 
 module.exports = router;

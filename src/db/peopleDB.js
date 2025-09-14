@@ -5,7 +5,7 @@ const findAll = () => connection.execute(
 );
 
 const findByID = (id) => connection.execute(
-    'SELECT * FROM people WHERE id = ?',
+    `SELECT * FROM people WHERE id = ?`,
     [id],
 );
 
@@ -15,8 +15,21 @@ const insert = (person) => connection.execute(
     [person.firstName, person.lastName, person.email, person.phone],
 );
 
+const update = (id, person) => connection.execute(
+    `UPDATE people
+        SET first_name = ?, last_name = ?, email = ?, phone = ? WHERE id = ?`,
+    [person.firstName, person.lastName, person.email, person.phone, id],
+);
+
+const remove = (id) => connection.execute(
+    `DELETE FROM people WHERE id = ?`,
+    [id],
+);
+
 module.exports = {
     findAll,
     findByID,
     insert,
+    update,
+    remove,
 };
